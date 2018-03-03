@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 // for setting up the db
 var mongoose = require('mongoose');
 
@@ -58,6 +59,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 // app.listen(4200, 'localhost');
 console.log('App running :)');
 

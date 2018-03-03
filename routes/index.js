@@ -3,6 +3,20 @@ var router = express.Router();
 
 var task = require('../model/task');
 
+router.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    if (req.method === 'OPTIONS') {
+        var headers = {};
+        headers["Access-Control-Allow-Methods"] = "GET, OPTIONS";
+        headers["Access-Control-Allow-Credentials"] = false;
+        res.writeHead(200, headers);
+        res.end();
+    } else {
+        next();
+    }
+});
+
 /* GET ALL tasks */
 router.get('/tasks', function(req, res, next) {
     task.find(function (err, tasks) {
@@ -11,16 +25,15 @@ router.get('/tasks', function(req, res, next) {
     });
 });
 
-
 /* SAVE  tasks */
-router.get('/task/add', function(req, res, next) {
+router.post('/task/add', function(req, res, next) {
     var newTask  = {
         title : 'Go to somewhere',
         description : 'Let us tell this is desc of the task',
         isDone : false,
         priority : 2
     };
-    task.create(newTask, function (err, doc) {
+    task.save(newTask, function (err, doc) {
         if (err) return next(err);
         res.json(doc);
     });
@@ -35,7 +48,7 @@ router.put('/task/update/:id', function(req, res, next) {
 });
 
 /* GET SINGLE  tasks BY ID */
-router.get('/task/detail/:id', function(req, res, next) {
+router.get('/task/:id', function(req, res, next) {
     task.findById(req.params.id, function (err, doc) {
         if (err) return next(err);
         res.json(doc);
